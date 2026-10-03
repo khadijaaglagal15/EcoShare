@@ -125,6 +125,8 @@ During this project, I mainly worked on the **frontend development**, contributi
 
 The project report is available in the `docs/` folder.
 
+[View the project report](docs/rapport de stage de fin d'etude finale .pdf)
+
 ## 👩‍💻 Author
 
 **Khadija Aglagal**
