@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebSocket Notification Test</title>
+</head>
+<body>
+  <h2>Notifications en temps réel</h2>
+  <p>Status : <span id="status">Déconnecté</span></p>
+  <ul id="notifications"></ul>
+
+  <script>
+    const userId = 2; // 🔁 Modifie avec ton ID utilisateur réel
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MDY1MDA3LCJpYXQiOjE3NDcwNTQyMDcsImp0aSI6ImJmOTE1ZDI2Mzk3MzRjNDliODIwMmZjYzJhODc3ODI0IiwidXNlcl9pZCI6MX0.0l3nKfCynSXVTAD4UdChwuDjdQzOSLH8qTfgyvIhlXY";
+    const wsUrl = `ws://127.0.0.1:8000/ws/notifications/${userId}/?token=${token}`;
+
+    const statusEl = document.getElementById("status");
+    const notificationsEl = document.getElementById("notifications");
+
+    const socket = new WebSocket(wsUrl);
+
+    socket.onopen = () => {
+      statusEl.textContent = "Connecté ✅";
+      console.log("WebSocket connected");
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      const li = document.createElement("li");
+      li.textContent = data.notification || JSON.stringify(data);
+      notificationsEl.appendChild(li);
+    };
+
+    socket.onclose = () => {
+      statusEl.textContent = "Déconnecté ❌";
+      console.warn("WebSocket closed");
+    };
+
+    socket.onerror = (error) => {
+      statusEl.textContent = "Erreur ⚠️";
+      console.error("WebSocket error", error);
+    };
+  </script>
+</body>
+</html>

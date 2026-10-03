@@ -1,0 +1,8 @@
+for Messages: 
+-first we created a model named Messages in models.py then its serializer  and finally its view with a get and post method
+-second we created a consumers.py (adding a path in this file) then routing.py file (adding a ChatConsumer class in this file)
+
+for notifications:
+-First we created a model named notifications in models.py than its serializer and its view with get method only
+-Second we added a path to routing.py and notificationConsumer class and  a receive function to consumer.py.
+

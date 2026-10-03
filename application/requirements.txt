@@ -1,0 +1,6 @@
+react-native-vector-icons
+@react-native-async-storage/async-storage
+axios
+expo-av
+@expo/vector-icons
+expo-camera

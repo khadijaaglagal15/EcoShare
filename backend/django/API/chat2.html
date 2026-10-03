@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Chat WebSocket</title>
+</head>
+<body>
+  <h2>Chat en temps réel pour un produit</h2>
+  
+  <p>Status : <span id="status">Déconnecté</span></p>
+  <div>
+    <label>Receiver ID: <input type="number" id="receiverId" value="2" /></label><br>
+    <label>Message: <input type="text" id="messageInput" /></label>
+    <button onclick="sendMessage()">Envoyer</button>
+  </div>
+
+  <ul id="chatLog"></ul>
+
+  <script>
+    const productId = 1; // 🔁 Remplace par l'ID réel du produit
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ2OTk0ODQ1LCJpYXQiOjE3NDY5ODQwNDUsImp0aSI6IjA1MTliNmIwYWU5ODRlMTY4ZDk1NGE2OGM2ODkxOGRjIiwidXNlcl9pZCI6MX0._o7wa0t6x02iW-fttHPX0X1jlF1xDj2Wg_m2BS6VaxI";
+    const wsUrl = `ws://127.0.0.1:8000/ws/chat/${productId}/?token=${token}`;
+
+    const statusEl = document.getElementById("status");
+    const chatLog = document.getElementById("chatLog");
+
+    const socket = new WebSocket(wsUrl);
+
+    socket.onopen = () => {
+      statusEl.textContent = "Connecté ✅";
+      console.log("WebSocket connecté");
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      const li = document.createElement("li");
+      li.textContent = `${data.sender} → ${data.receiver} : ${data.content} (${data.timestamp})`;
+      chatLog.appendChild(li);
+    };
+
+    socket.onclose = () => {
+      statusEl.textContent = "Déconnecté ❌";
+      console.warn("WebSocket fermé");
+    };
+
+    socket.onerror = (error) => {
+      statusEl.textContent = "Erreur ⚠️";
+      console.error("WebSocket error", error);
+    };
+
+    function sendMessage() {
+      const receiverId = document.getElementById("receiverId").value;
+      const message = document.getElementById("messageInput").value;
+
+      const data = {
+        receiver_id: receiverId,
+        content: message
+      };
+
+      socket.send(JSON.stringify(data));
+    }
+  </script>
+</body>
+</html>
